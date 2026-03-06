@@ -49,7 +49,7 @@ Consumer (Python) - Real-time fraud detection
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/cdr-fraud-detection.git
+git clone https://github.com/ezechimere/cdr-fraud-detection.git
 cd cdr-fraud-detection
 ```
 
