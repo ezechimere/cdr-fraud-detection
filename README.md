@@ -36,6 +36,7 @@ Consumer (Python) - Real-time fraud detection
 - **Python 3.8+** - Application logic
 - **PostgreSQL 15** - Analytics database
 - **Redis 7** - Real-time metrics cache
+- **Grafana 10.2.0** - Analytics dashboards
 - **Docker Compose** - Infrastructure orchestration
 
 ## Prerequisites
@@ -117,6 +118,83 @@ python src/cdr_generator.py
 - **PostgreSQL**: `docker exec -it postgres psql -U kafka_user -d cdr_analytics`
 - **Query Database**: `python src/query_db.py`
 
+## Grafana Dashboard
+
+### Overview
+
+Real-time analytics dashboard visualizing CDR processing metrics, revenue trends, and fraud detection results.
+
+### Dashboard Panels
+
+1. **Total Voice Revenue** - Aggregate revenue from all voice calls
+2. **Total Voice Calls** - Total number of processed calls
+3. **Calls Over Time** - Hourly trend analysis of call volume
+4. **Revenue by Call Type** - Breakdown between MOC (Mobile Originated) and MTC (Mobile Terminated) calls
+5. **Top 10 Revenue Users** - Highest revenue-generating phone numbers
+
+### Setup
+
+**1. Add Grafana to Docker:**
+
+Already included in `docker-compose.yml`:
+- Grafana: http://localhost:3000
+- Login: admin/admin
+
+**2. Add PostgreSQL Data Source:**
+
+- Host: `postgres:5432`
+- Database: `cdr_analytics`
+- User: `kafka_user`
+- Password: `kafka_pass`
+- TLS/SSL Mode: `disable`
+
+**3. Import Dashboard:**
+
+Create visualizations using these queries:
+```sql
+-- Total Voice Revenue
+SELECT SUM(revenue) as "Total Revenue"
+FROM voice_calls;
+
+-- Calls Over Time
+SELECT 
+  DATE_TRUNC('hour', call_timestamp) as time,
+  COUNT(*) as "Calls"
+FROM voice_calls
+GROUP BY time
+ORDER BY time;
+
+-- Revenue by Call Type
+SELECT 
+  call_type,
+  SUM(revenue) as revenue
+FROM voice_calls
+GROUP BY call_type;
+
+-- Top Revenue Users
+SELECT 
+  msisdn as "Phone Number",
+  COUNT(*) as "Calls",
+  SUM(duration) as "Total Minutes",
+  SUM(revenue) as "Revenue"
+FROM voice_calls
+GROUP BY msisdn
+ORDER BY "Revenue" DESC
+LIMIT 10;
+```
+
+### Access Dashboard
+
+http://localhost:3000
+
+**Default credentials:** admin/admin
+
+
+### Dashboard Preview
+
+![Grafana Dashboard](screenshots/grafana-dashboard.png)
+
+
 ## Sample Output
 ```
 CDR Consumer started. Processing events...
@@ -197,7 +275,6 @@ cdr-fraud-detection/
 - Machine learning-based fraud prediction
 - Behavioral analysis (deviation from user patterns)
 - Premium rate destination blacklist
-- Real-time Grafana dashboards
 - Email/SMS alerting for critical fraud
 - Multi-telco deployment capability
 
