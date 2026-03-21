@@ -295,8 +295,6 @@ MIT License - See LICENSE file for details
 
 **Conrad Mba** - Software Engineer | Data Engineering & Real-Time Systems | Kafka Specialist
 
-- LinkedIn: [https://www.linkedin.com/in/conrad-mba/]- Email: [mbaconrad@gmail.com]
-
-## Acknowledgments
-
-Built as part of intensive Kafka training program focused on real-time stream processing for telecom fraud detection.
+- LinkedIn: [https://www.linkedin.com/in/conrad-mba/]
+- Email: [mbaconrad@gmail.com]
+- GitHub: [https://github.com/ezechimere]
